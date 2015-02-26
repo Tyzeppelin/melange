@@ -1,8 +1,10 @@
 package fr.inria.diverse.melange.resource
 
+import fr.inria.diverse.melange.resource.loader.DozerLoader
 import java.io.IOException
 import java.util.Map
 import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl
@@ -17,8 +19,8 @@ class MelangeResourceFactoryImpl implements Resource.Factory
 
 		val splits = uri.query?.split("=")
 
-		// Loading through a viewpoint
-		if (splits !== null && splits.size == 2 && splits.head == "mt")
+		// Loading through a viewpoint / metamodel
+		if (splits !== null && splits.size == 2 && #["mt", "mm"].contains(splits.head))
 			return new MelangeResourceImpl(uri)
 		// Nothing special: fallback to XMI resource creation
 		else {
@@ -28,15 +30,22 @@ class MelangeResourceFactoryImpl implements Resource.Factory
 	}
 }
 
-class MelangeResourceImpl implements Resource$Internal
+class MelangeResourceImpl implements Resource.Internal
 {
 	String expectedMt
-	@Delegate Resource$Internal wrappedResource
+	String expectedMm
+	@Delegate Resource.Internal wrappedResource
 
 	new(URI melangeUri) {
 		val fallbackUri = melangeUri.melangeURIToPlatformURI
-		wrappedResource = new ResourceSetImpl().getResource(fallbackUri, true) as Resource$Internal
-		expectedMt = melangeUri.query.split("=").get(1)
+		val query = melangeUri.query.split("=")
+
+		wrappedResource = new ResourceSetImpl().getResource(fallbackUri, true) as Resource.Internal
+
+		if (query.head == "mt")
+			expectedMt = query.get(1)
+		else if (query.head == "mm")
+			expectedMm = query.get(1)
 	}
 
 	override getContents() throws RuntimeException {
@@ -46,21 +55,33 @@ class MelangeResourceImpl implements Resource$Internal
 			return objs
 
 		val actualPkgUri = objs.head.eClass.EPackage.nsURI
-		val pair = actualPkgUri -> expectedMt
-		val adapterCls = ModelTypeAdapter.Registry::INSTANCE.get(pair)
 
-		if (adapterCls !== null) {
-			try {
-				val adapter = adapterCls.newInstance => [adaptee = wrappedResource]
-				return adapter.contents
-			} catch (InstantiationException e) {
-				throw new MelangeResourceException('''Cannot instantiate adapter type «adapterCls»''', e)
-			} catch (IllegalAccessException e) {
-				throw new MelangeResourceException('''Cannot access adapter type «adapterCls»''', e)
+		if (expectedMt !== null) {
+			val pair = actualPkgUri -> expectedMt
+			val adapterCls = ModelTypeAdapter.Registry::INSTANCE.get(pair)
+
+			if (adapterCls !== null) {
+				try {
+					val adapter = adapterCls.newInstance => [adaptee = wrappedResource]
+					return adapter.contents
+				} catch (InstantiationException e) {
+					throw new MelangeResourceException('''Cannot instantiate adapter type «adapterCls»''', e)
+				} catch (IllegalAccessException e) {
+					throw new MelangeResourceException('''Cannot access adapter type «adapterCls»''', e)
+				}
 			}
-		}
 
-		throw new MelangeResourceException('''No adapter class registered for «pair»''')
+			throw new MelangeResourceException('''No adapter class registered for «pair»''')
+		}
+		else if (expectedMm !== null) {
+			val loader = new DozerLoader
+			val basePkg = EPackage$Registry.INSTANCE.get(expectedMm) as EPackage
+			val expectedPkg = EPackage$Registry.INSTANCE.get(actualPkgUri) as EPackage
+			loader.initialize(basePkg, expectedPkg)
+			val res = loader.loadExtendedAsBase(wrappedResource.URI.toString, true)
+
+			return res.contents
+		}
 	}
 
 	override getAllContents() {
