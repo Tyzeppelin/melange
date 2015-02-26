@@ -87,8 +87,7 @@ class ResourceTest
 	}
 
 	@Test
-	def void testUpcastTranstyping() {
-		println("Begin1")
+	def void testDowncastTranstyping() {
 		val uri = "melange:/resource/fr.inria.diverse.melange.tests/tests-inputs/models/Simple.fsm?mm=http://timedfsm/"
 		val res = uri.getResource
 
@@ -102,8 +101,7 @@ class ResourceTest
 	}
 
 	@Test
-	def void testDowncastTranstyping() {
-		println("Begin2")
+	def void testUpcastTranstyping() {
 		val uri = "melange:/resource/fr.inria.diverse.melange.tests/tests-inputs/models/Simple.timedfsm?mm=http://fsm/"
 		val res = uri.getResource
 
