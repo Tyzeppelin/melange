@@ -41,7 +41,7 @@ class MappersInferrer{
 		task.start
 		
 		val sourceModel = root.metamodels.findFirst[name == mapping.from]
-		val targetMT = root.metamodels.findFirst[name == mapping.to].exactType
+		val targetMT = root.modelTypes.findFirst[name == mapping.to]
 		
 		//Generate Mapper Factory
 		generateMapperFactory(mapping,sourceModel,targetMT,acceptor,builder)

@@ -48,9 +48,9 @@ class TypingInferrer extends DispatchMelangeProcessor
 		
 		root.mappings.forEach[mapping |
 			val sourceMM = root.metamodels.findFirst[name == mapping.from]
-			val targetMM = root.metamodels.findFirst[name == mapping.to]
+			val targetMT = root.modelTypes.findFirst[name == mapping.to]
 			
-			typesRegistry.registerMapping(sourceMM.fullyQualifiedName.toString, targetMM.exactType)
+			typesRegistry.registerMapping(sourceMM.fullyQualifiedName.toString, targetMT)
 		]
 	}
 

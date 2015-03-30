@@ -84,7 +84,7 @@ class MetamodelInferrer
 			]
 			
 			root.mappings.filter[from == mm.name].forEach[ bind |
-				val mt = root.metamodels.findFirst[bind.to == name].exactType
+				val mt = root.modelTypes.findFirst[bind.to == name]
 				
 				val adapName = mm.mapperNameFor(mt)
 
