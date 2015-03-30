@@ -39,6 +39,12 @@ class ModelOrientedXbaseCompiler extends XbaseCompiler
 			&& returned.isSubtypeOf(IMetamodel)
 			&& typesRegistry.getImplementations(returned.identifier)
 			   .exists[fullyQualifiedName.toString == expected.identifier]
+			   
+		val isMapped =
+			   wrap
+			&& returned.isSubtypeOf(IMetamodel)
+			&& typesRegistry.getMappings(returned.identifier)
+			   .exists[fullyQualifiedName.toString == expected.identifier]
 
 		val isSubtype =
 			   wrap
@@ -56,6 +62,13 @@ class ModelOrientedXbaseCompiler extends XbaseCompiler
 		if (isImplements) {
 			val match =
 				typesRegistry.getImplementations(returned.identifier)
+				.findFirst[fullyQualifiedName.toString == expected.identifier]
+
+			appendable.append('''.to«match.name»()''')
+		}
+		else if (isMapped){
+			val match =
+				typesRegistry.getMappings(returned.identifier)
 				.findFirst[fullyQualifiedName.toString == expected.identifier]
 
 			appendable.append('''.to«match.name»()''')
@@ -83,6 +96,15 @@ class ModelOrientedXbaseCompiler extends XbaseCompiler
 			&& typesRegistry.getImplementations(type.identifier).exists[fullyQualifiedName.toString == expectedType.identifier]
 		) { // implements
 			val match = typesRegistry.getImplementations(type.identifier).findFirst[fullyQualifiedName.toString == expectedType.identifier]
+			internalToConvertedExpression(expr.target, b, expectedType)
+			b.append('''.to«match.name»()''')
+		}
+		else if (
+			   expectedType.isSubtypeOf(IModelType)
+			&& type.isSubtypeOf(IMetamodel)
+			&& typesRegistry.getMappings(type.identifier).exists[fullyQualifiedName.toString == expectedType.identifier]
+		) { // mapped
+			val match = typesRegistry.getMappings(type.identifier).findFirst[fullyQualifiedName.toString == expectedType.identifier]
 			internalToConvertedExpression(expr.target, b, expectedType)
 			b.append('''.to«match.name»()''')
 		}

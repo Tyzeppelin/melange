@@ -45,6 +45,13 @@ class TypingInferrer extends DispatchMelangeProcessor
 				typesRegistry.registerImplementation(mm.fullyQualifiedName.toString, mt1)
 			]
 		]
+		
+		root.mappings.forEach[mapping |
+			val sourceMM = root.metamodels.findFirst[name == mapping.from]
+			val targetMM = root.metamodels.findFirst[name == mapping.to]
+			
+			typesRegistry.registerMapping(sourceMM.fullyQualifiedName.toString, targetMM.exactType)
+		]
 	}
 
 	def dispatch void postProcess(ModelTypingSpace root) {

@@ -30,6 +30,10 @@ class MelangeSynonymTypesProvider extends SynonymTypesProvider
 		typesRegistry.getImplementations(type.identifier).forEach[mt |
 			announceModelType(type.owner, mt.fullyQualifiedName.toString, acceptor)
 		]
+		
+		typesRegistry.getMappings(type.identifier).forEach[mt |
+			announceModelType(type.owner, mt.fullyQualifiedName.toString, acceptor)
+		]
 
 		typesRegistry.getSubtypings(type.identifier).forEach[mt |
 			announceModelType(type.owner, mt.fullyQualifiedName.toString, acceptor)
