@@ -35,14 +35,14 @@ class EPackageProvider
 
 	def List<EPackage> getPackages(ModelingElement m) {
 		if (!packages.containsKey(m)) {
-			if (m instanceof Metamodel) {
-				val project = m.eResource.project
-				if (m.isGeneratedByMelange && project !== null)
-					if (project.getFile(m.localEcorePath).exists)
-						m.ecoreUri = m.localEcoreUri
-					else if (project.getFile(m.externalEcorePath).exists)
-						m.ecoreUri = m.externalEcoreUri
-			}
+//			if (m instanceof Metamodel) {
+//				val project = m.eResource.project
+//				if (m.isGeneratedByMelange && project !== null)
+//					if (project.getFile(m.localEcorePath).exists)
+//						m.ecoreUri = m.localEcoreUri
+//					else if (project.getFile(m.externalEcorePath).exists)
+//						m.ecoreUri = m.externalEcoreUri
+//			}
 
 			switch (m) {
 				case m.ecoreUri !== null: {

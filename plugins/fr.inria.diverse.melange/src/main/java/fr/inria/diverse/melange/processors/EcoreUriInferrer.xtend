@@ -14,12 +14,12 @@ class EcoreUriInferrer extends DispatchMelangeProcessor
 	@Inject extension EclipseProjectHelper
 
 	def dispatch void preProcess(Metamodel mm) {
-		val project = mm.eResource.project
-
-		if (mm.isGeneratedByMelange && project !== null)
-			if (project.getFile(mm.localEcorePath).exists)
-				mm.ecoreUri = mm.localEcoreUri
-			else if (project.getFile(mm.externalEcorePath).exists)
-				mm.ecoreUri = mm.externalEcoreUri
+//		val project = mm.eResource.project
+//
+//		if (mm.isGeneratedByMelange && project !== null)
+//			if (project.getFile(mm.localEcorePath).exists)
+//				mm.ecoreUri = mm.localEcoreUri
+//			else if (project.getFile(mm.externalEcorePath).exists)
+//				mm.ecoreUri = mm.externalEcoreUri
 	}
 }
