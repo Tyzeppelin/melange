@@ -6,6 +6,7 @@ import fr.inria.diverse.melange.jvmmodel.MelangeTypesBuilder
 import fr.inria.diverse.melange.metamodel.melange.ModelTypingSpace
 import fr.inria.diverse.melange.processors.AspectsCopier
 import fr.inria.diverse.melange.processors.AspectsWeaver
+import fr.inria.diverse.melange.processors.EclipseProjectSynchronizer
 import fr.inria.diverse.melange.processors.EcoreUriInferrer
 import fr.inria.diverse.melange.processors.ExactTypeInferrer
 import fr.inria.diverse.melange.processors.ExtensionPointProcessor
@@ -48,7 +49,8 @@ class MelangeDerivedStateComputer extends JvmModelAssociator
 		ExactTypeInferrer e,
 		TypingInferrer t,
 		ExtensionPointProcessor p,
-		ModelTypeSerializer s
+		ModelTypeSerializer s,
+		EclipseProjectSynchronizer eps
 	) {
 		processors += i
 		processors += c
@@ -57,6 +59,7 @@ class MelangeDerivedStateComputer extends JvmModelAssociator
 		processors += t
 		processors += p
 		processors += s
+		processors += eps
 	}
 
 	override discardDerivedState(DerivedStateAwareResource resource) {
