@@ -18,10 +18,10 @@ class MelangeUiModule extends AbstractMelangeUiModule
 	def Class<? extends LanguageRootPreferencePage> bindLanguageRootPreferencePage() {
 	    return typeof(MelangePreferencePage)
 	}
-	
+
 	override Class<? extends IHyperlinkHelper> bindIHyperlinkHelper() {
 	    return typeof(MelangeHyperlinkHelper)
-	}
+}
 
 	def static void logErrorMessage(String message, Throwable e) {
 		MelangeActivator.instance.log.log(
