@@ -615,7 +615,7 @@
            name="Melange">
      </category>
      <wizard
-           canFinishEarly="false"
+           canFinishEarly="true"
            category="fr.inria.diverse.melange.category"
            class="fr.inria.diverse.melange.ui.wizards.NewMelangeProjectWizard"
            icon="icons/melange.png"
