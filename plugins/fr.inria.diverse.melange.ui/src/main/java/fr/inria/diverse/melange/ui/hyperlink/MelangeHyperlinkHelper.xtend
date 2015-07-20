@@ -1,7 +1,7 @@
 package fr.inria.diverse.melange.ui.hyperlink
 
-import fr.inria.diverse.melange.metamodel.melange.Ecore
-import fr.inria.diverse.melange.metamodel.melange.Metamodel
+import fr.inria.diverse.melange.metamodel.melange.Import
+import fr.inria.diverse.melange.metamodel.melange.Language
 import java.util.List
 import org.eclipse.emf.common.util.URI
 import org.eclipse.jface.text.Region
@@ -14,21 +14,23 @@ import org.eclipse.xtext.xbase.ui.navigation.XbaseHyperLinkHelper
 import org.eclipse.xtext.xtype.XImportDeclaration
 import org.eclipse.xtext.xtype.XtypePackage
 
-@SuppressWarnings("restricted")
+
 class MelangeHyperlinkHelper extends XbaseHyperLinkHelper{
     
     override createHyperlinksByOffset(XtextResource resource, int offset, IHyperlinkAcceptor acceptor) {
         
         val element = getEObjectAtOffsetHelper.resolveElementAt(resource, offset)
         
-        if (element instanceof Ecore) {
-            val URI = URI.createURI(element.ecoreUri)
-            val region = getRegionByOffset(resource, offset)
+        if (element instanceof Import) {
+            println(element.ecoreUri)
+            val uri = URI.createURI(element.ecoreUri)
+//            val region = getRegionByOffset(resource, offset)
             val hyperlink = hyperlinkProvider.get()
             
-            hyperlink.setHyperlinkRegion(region)
-            hyperlink.setURI(URI)
-            hyperlink.setHyperlinkText("Open "+ (element.eContainer as Metamodel).name +" Ecore file")
+//            hyperlink.setHyperlinkRegion(region)
+            hyperlink.setHyperlinkRegion(new Region(offset, 1))
+            hyperlink.setURI(uri)
+            hyperlink.setHyperlinkText("Open "+ (element.eContainer as Language).name +" Ecore file")
             
             acceptor.accept(hyperlink)
         }
