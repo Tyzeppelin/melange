@@ -7,7 +7,6 @@ import fr.inria.diverse.melange.metamodel.melange.Metamodel
 import fr.inria.diverse.melange.metamodel.melange.ModelType
 import fr.inria.diverse.melange.metamodel.melange.Transformation
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
-import org.eclipse.emf.ecore.EAnnotation
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.common.types.JvmTypeReference
@@ -21,7 +20,7 @@ class MelangeOutlineTreeProvider extends DefaultOutlineTreeProvider
 	def boolean _isLeaf(Transformation t) {
 		return true
 	}
-
+	
 	def boolean _isLeaf(EStructuralFeature a){
 	    return true
 	}
@@ -37,29 +36,28 @@ class MelangeOutlineTreeProvider extends DefaultOutlineTreeProvider
 	def void _createNode(IOutlineNode parentNode, Metamodel mm) {
 		// Nope
 	}
-
-	def void _createNode(IOutlineNode parentNode, EAnnotation a){
-	    // Nope
-	}
-
-
-	def void _createNode(IOutlineNode parentNode, ModelType mt) {
+    
+    // Create node for each ModelType
+    // I suppose we can display the transitions of the model type
+   	def void _createNode(IOutlineNode parentNode, ModelType mt) {
 		val mNode = createEObjectNode(parentNode, mt)
 
 		mt.pkgs.forEach[pkg |
 		    createNode(mNode, pkg)
 		]
 	}
-
+    
 	def void _createNode(IOutlineNode parentNode, Language l) {
 		val mNode = createEObjectNode(parentNode, l)
 
 		l.syntax.pkgs.filter[ESuperPackage === null].forEach[pkg |
 		    createNode(mNode, pkg)
+
 		]
 
 		l.semantics.forEach[asp |
 		    createNode(mNode, asp)
+
 		]
 	}
 
@@ -70,5 +68,4 @@ class MelangeOutlineTreeProvider extends DefaultOutlineTreeProvider
             createNode(mNode, pkg)
         ]
     }
-
 }
