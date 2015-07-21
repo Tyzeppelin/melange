@@ -16,7 +16,7 @@ class MelangeHyperlinkHelper extends XbaseHyperLinkHelper{
         
         if (element instanceof Import) {            
             
-            val uriConverter = resource.getResourceSet().getURIConverter()
+            val uriConverter = resource.resourceSet.URIConverter
             val uri = URI.createURI(element.ecoreUri)
 //            val region = getRegionByOffset(resource, offset)
             var URI normalized
@@ -31,7 +31,7 @@ class MelangeHyperlinkHelper extends XbaseHyperLinkHelper{
             hyperlink.setHyperlinkRegion(new Region(offset, 1))
             hyperlink.setURI(normalized)
             hyperlink.setHyperlinkText("Open "+ (element.eContainer as Language).name +" Ecore file")
-            hyperlink.typeLabel = "Ecore"
+            hyperlink.typeLabel = "Ecore file"
             acceptor.accept(hyperlink)
         }
         else {
