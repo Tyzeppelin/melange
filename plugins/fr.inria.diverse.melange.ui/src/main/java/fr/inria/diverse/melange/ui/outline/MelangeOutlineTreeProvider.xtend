@@ -7,6 +7,7 @@ import fr.inria.diverse.melange.metamodel.melange.Metamodel
 import fr.inria.diverse.melange.metamodel.melange.ModelType
 import fr.inria.diverse.melange.metamodel.melange.Transformation
 import org.eclipse.emf.codegen.ecore.genmodel.GenModel
+import org.eclipse.emf.ecore.EAnnotation
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.common.types.JvmTypeReference
@@ -24,6 +25,7 @@ class MelangeOutlineTreeProvider extends DefaultOutlineTreeProvider
 	def boolean _isLeaf(EStructuralFeature a){
 	    return true
 	}
+
     def void _createNode(IOutlineNode parentNode, JvmTypeReference ref) {
 		// Nope
     }
@@ -35,9 +37,12 @@ class MelangeOutlineTreeProvider extends DefaultOutlineTreeProvider
 	def void _createNode(IOutlineNode parentNode, Metamodel mm) {
 		// Nope
 	}
-    
-    // Create node for each ModelType
-    // I suppose we can display the transitions of the model type
+
+	def void _createNode(IOutlineNode parentNode, EAnnotation a){
+	    // Nope
+	}
+
+
    	def void _createNode(IOutlineNode parentNode, ModelType mt) {
 		val mNode = createEObjectNode(parentNode, mt)
 
