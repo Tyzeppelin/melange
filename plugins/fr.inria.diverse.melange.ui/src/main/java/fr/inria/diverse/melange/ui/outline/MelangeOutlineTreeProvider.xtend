@@ -24,7 +24,6 @@ class MelangeOutlineTreeProvider extends DefaultOutlineTreeProvider
 	def boolean _isLeaf(EStructuralFeature a){
 	    return true
 	}
-
     def void _createNode(IOutlineNode parentNode, JvmTypeReference ref) {
 		// Nope
     }
