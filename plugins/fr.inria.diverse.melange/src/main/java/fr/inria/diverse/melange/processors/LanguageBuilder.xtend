@@ -321,7 +321,7 @@ class LanguageBuilder extends DispatchMelangeProcessor{
 		val sliceBase = EcoreUtil::copy(getRootPackage(slice.slicedLanguage,history))
 		EcoreUtil.resolveAll(sliceBase)
 		
-		val roots = getClasses(sliceBase, slice.roots)
+		val roots = new ArrayList<EModelElement>(slice.roots)
 		val slicer = new StrictEcore(roots,sliceBase,false,"ecore",false)
 		slicer.slice
 		

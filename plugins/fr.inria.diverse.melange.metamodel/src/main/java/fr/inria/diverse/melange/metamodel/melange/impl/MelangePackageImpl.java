@@ -742,8 +742,8 @@ public class MelangePackageImpl extends EPackageImpl implements MelangePackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getSlice_Roots() {
-		return (EAttribute)sliceEClass.getEStructuralFeatures().get(1);
+	public EReference getSlice_Roots() {
+		return (EReference)sliceEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -752,7 +752,7 @@ public class MelangePackageImpl extends EPackageImpl implements MelangePackage {
 	 * @generated
 	 */
 	public EReference getSlice_MappingRules() {
-		return (EReference)sliceEClass.getEStructuralFeatures().get(2);
+		return (EReference)sliceEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1049,8 +1049,8 @@ public class MelangePackageImpl extends EPackageImpl implements MelangePackage {
 
 		sliceEClass = createEClass(SLICE);
 		createEReference(sliceEClass, SLICE__SLICED_LANGUAGE);
-		createEAttribute(sliceEClass, SLICE__ROOTS);
 		createEReference(sliceEClass, SLICE__MAPPING_RULES);
+		createEReference(sliceEClass, SLICE__ROOTS);
 
 		packageBindingEClass = createEClass(PACKAGE_BINDING);
 		createEAttribute(packageBindingEClass, PACKAGE_BINDING__FROM);
@@ -1199,8 +1199,8 @@ public class MelangePackageImpl extends EPackageImpl implements MelangePackage {
 
 		initEClass(sliceEClass, Slice.class, "Slice", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSlice_SlicedLanguage(), this.getLanguage(), null, "slicedLanguage", null, 1, 1, Slice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getSlice_Roots(), ecorePackage.getEString(), "roots", null, 0, -1, Slice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getSlice_MappingRules(), this.getPackageBinding(), null, "mappingRules", null, 0, -1, Slice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getSlice_Roots(), theEcorePackage.getEClass(), null, "roots", null, 0, -1, Slice.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(packageBindingEClass, PackageBinding.class, "PackageBinding", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPackageBinding_From(), ecorePackage.getEString(), "from", null, 0, 1, PackageBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
