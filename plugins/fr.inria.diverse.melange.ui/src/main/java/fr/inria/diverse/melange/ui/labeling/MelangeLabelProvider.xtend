@@ -60,23 +60,7 @@ class MelangeLabelProvider extends XbaseLabelProvider
 		return '''«l.name»«FOR t : l.superLanguages BEFORE '\u25C0' SEPARATOR ', '»«t.name»«ENDFOR»«FOR t : l.implements BEFORE ' \u25C1 ' SEPARATOR ', '»«t.name»«ENDFOR»'''.toString
 	}
 
-//	def String text(EAttribute a){
-//	    return '''«a.name» : «a.EType.name»'''
-//	}
-//
-//	def String text(EReference r){
-//	    return '''«r.name» : «r.EType.name»'''
-//	}
-//
-//	def String text(EOperation o){
-//	    return '''«o.name» : «o.EType.name»'''
-//	}
-//
-//	def String text(EParameter p){
-//	    return '''«p.name» : «p.EType.name»'''
-//	}
-
     def String text(ETypedElement te){
-        return '''«te.name» : «te.EType.name»'''
+        return '''«te.name» «IF te.EType !== null»: «te.EType.name»«ENDIF»'''
     }
 }
