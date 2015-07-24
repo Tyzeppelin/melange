@@ -161,7 +161,7 @@ class LanguageBuilder extends DispatchMelangeProcessor{
 		 	needNewEcore = true
 		 	val firstSlice = slices.get(0)
 			val sliceBase = applySlice(firstSlice, history)
-			applyRenaming(sliceBase, firstSlice.mappingRules)
+//			applyRenaming(sliceBase, firstSlice.mappingRules)
 			
 			slices.drop(1).forEach[ nextSlice |
 				val sliceUnit = applySlice(nextSlice, history)
