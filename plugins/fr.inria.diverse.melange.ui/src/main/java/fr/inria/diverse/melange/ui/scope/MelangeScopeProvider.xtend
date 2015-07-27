@@ -5,13 +5,13 @@ import fr.inria.diverse.melange.ast.ModelingElementExtensions
 import fr.inria.diverse.melange.metamodel.melange.Language
 import fr.inria.diverse.melange.metamodel.melange.MelangePackage
 import fr.inria.diverse.melange.metamodel.melange.Slice
-import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider
+import org.eclipse.xtext.scoping.impl.SimpleScope
 
 class MelangeScopeProvider extends AbstractDeclarativeScopeProvider {
     
@@ -35,14 +35,12 @@ class MelangeScopeProvider extends AbstractDeclarativeScopeProvider {
     def dispatch IScope getScope(Language language, EReference ref){
         if (ref.featureID == MelangePackage.LANGUAGE__OPERATORS) {
             val owning = language.name
-            println(owning)
             val basic = super.getScope((language as EObject), ref).allElements
-            println(basic.get(0).class)
-            val enhanced = basic.filter[!it.name.toString.contains(owning)]
-//            val List<EObject> res = enhanced.toList
-//            val scope = Scopes.scopeFor(enhanced)
-            return super.getScope(language as EObject, ref)
-//            return scope
+            val filtered = basic.filter[!it.name.toString.contains(owning)]
+            
+            val scope = new SimpleScope(IScope.NULLSCOPE, filtered)
+            
+            return scope
         }
         return super.getScope(language as EObject, ref)
     }
