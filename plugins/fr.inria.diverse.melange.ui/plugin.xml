@@ -702,5 +702,58 @@
             fileExtensions="melange">
       </participant>
    </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="fr.inria.diverse.melange.ui.MelangeExecutableExtensionFactory:fr.inria.diverse.melange.ui.propertytester.ExtensionFilePropertyTester"
+            id="fr.inria.diverse.melange.ui.propertytester.ExtensionFilePropertyTester"
+            namespace="fr.inria.diverse.melange.ui"
+            properties="isMelangeLanguage"
+            type="org.eclipse.core.resources.IFile">
+      </propertyTester>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="fr.inria.diverse.melange.ui.command.open"
+            name="Open as">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="fr.inria.diverse.melange.ui.MelangeExecutableExtensionFactory:fr.inria.diverse.melange.ui.handlers.OpenAs"
+            commandId="fr.inria.diverse.melange.ui.command.open">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?after=group.open">
+         <command
+               commandId="fr.inria.diverse.melange.ui.command.open"
+               icon="icons/melange.png"
+               label="Open As ..."
+               mnemonic="A"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <iterate
+                        ifEmpty="false">
+                     <adapt
+                           type="org.eclipse.core.resources.IFile">
+                        <test
+                              property="fr.inria.diverse.melange.ui.isMelangeLanguage">
+                        </test>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
 
 </plugin>
