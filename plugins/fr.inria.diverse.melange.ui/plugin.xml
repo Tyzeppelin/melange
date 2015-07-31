@@ -754,6 +754,11 @@
             </visibleWhen>
          </command>
       </menuContribution>
+      <menuContribution
+            allPopups="false"
+            class="fr.inria.diverse.melange.ui.menu.OpenAsMenu"
+            locationURI="popup:org.eclipse.ui.popup.any?after=group.open">
+      </menuContribution>
    </extension>
 
 </plugin>

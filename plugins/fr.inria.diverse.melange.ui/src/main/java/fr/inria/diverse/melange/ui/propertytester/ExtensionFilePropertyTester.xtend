@@ -21,6 +21,12 @@ class ExtensionFilePropertyTester extends PropertyTester {
 						
 			val reg = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.ui.editors").filter[it.attributeNames.contains("extensions")]
 			
+			val reg2 = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.emf.ecore.generated_package")
+			
+			val swiss = reg2.filter[it.attributeNames.contains("uri")]
+			
+			
+						
 			if(reg.exists[it.getAttribute("extensions") == ext] || ext == "xmi") {
 //				println("C'est pas que ca fuit c'est que ca deborde!")
 				return true	
