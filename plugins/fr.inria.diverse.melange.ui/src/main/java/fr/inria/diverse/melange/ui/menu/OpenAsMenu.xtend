@@ -5,7 +5,8 @@ import org.eclipse.core.internal.expressions.AdaptExpression
 import org.eclipse.core.internal.expressions.IterateExpression
 import org.eclipse.core.internal.expressions.TestExpression
 import org.eclipse.core.internal.expressions.WithExpression
-import org.eclipse.jface.action.IContributionItem
+import org.eclipse.jface.action.ContributionItem
+import org.eclipse.jface.action.MenuManager
 import org.eclipse.ui.menus.CommandContributionItem
 import org.eclipse.ui.menus.CommandContributionItemParameter
 import org.eclipse.ui.menus.ExtensionContributionFactory
@@ -16,20 +17,15 @@ class OpenAsMenu extends ExtensionContributionFactory {
 	
 	override createContributionItems(IServiceLocator serviceLocator, IContributionRoot additions) {
 		
-//		val CommandContributionItemParameter okarin = createCommand(serviceLocator, "Okarin") 
+		val camus = createCommand(serviceLocator, "Camus") 
 		
-		val CommandContributionItemParameter mayushi = createCommand(serviceLocator, "~ Tuturu ~") 
-			
-//		val IContributionItem m = new MenuManager("Steins;gate", "dunno")
-//		
-//		val IContributionItem c = new CommandContributionItem(okarin)
+		val aldebaran = createCommand(serviceLocator, "Aldebaran") 
 		
-		val IContributionItem a = new CommandContributionItem(mayushi)
-		
-//		additions.addContributionItem(m, getExpression)
-		
-//		additions.addContributionItem(c, getExpression)
-		additions.addContributionItem(a, getExpression)
+		val m = new MenuManager("Open &As ...", "dunno")
+
+		m.add(camus)
+		m.add(aldebaran)
+		additions.addContributionItem(m, getExpression)
 		
 	}
 	
@@ -50,7 +46,10 @@ class OpenAsMenu extends ExtensionContributionFactory {
 	}
 	
 	def createCommand(IServiceLocator serviceLocator, String name) {
-		return new CommandContributionItemParameter
-				(serviceLocator, "opop", "fr.inria.diverse.melange.ui.command.open", null, null, null, null, name, "o", null, CommandContributionItem.STYLE_PUSH, null, true)
+		return new CommandContributionItem 
+				(new CommandContributionItemParameter
+					(serviceLocator, "melange."+name, "fr.inria.diverse.melange.ui.command.open", 
+						null, null, null, null, name, "o", null, CommandContributionItem.STYLE_PUSH, null, true
+					))
 	}
 }

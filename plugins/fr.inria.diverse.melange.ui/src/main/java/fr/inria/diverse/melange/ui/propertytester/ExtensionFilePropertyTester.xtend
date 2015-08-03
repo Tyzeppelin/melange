@@ -14,18 +14,14 @@ class ExtensionFilePropertyTester extends PropertyTester {
 			
 			this.exts = newArrayList()
 			
-			val file = receiver as IFile
+			val file = receiver
 			val ext = file.fileExtension
 			
 //			println("Let me shake your hand!")
 						
 			val reg = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.ui.editors").filter[it.attributeNames.contains("extensions")]
 			
-			val reg2 = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.emf.ecore.generated_package")
-			
-			val swiss = reg2.filter[it.attributeNames.contains("uri")]
-			
-			
+//			val reg2 = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.emf.ecore.generated_package")
 						
 			if(reg.exists[it.getAttribute("extensions") == ext] || ext == "xmi") {
 //				println("C'est pas que ca fuit c'est que ca deborde!")
