@@ -1,4 +1,4 @@
-package fr.inria.diverse.melange.ui.propertytester
+package fr.inria.diverse.melange.ui.menu.propertytester
 
 import org.eclipse.core.expressions.PropertyTester
 import org.eclipse.core.resources.IFile
@@ -6,18 +6,15 @@ import org.eclipse.core.runtime.Platform
 
 class ExtensionFilePropertyTester extends PropertyTester {
 	
-	String[] exts
-	
 	override test(Object receiver, String property, Object[] args, Object expectedValue) {
 		
 		if (receiver instanceof IFile) {
 			
-			this.exts = newArrayList()
 			
 			val file = receiver
 			val ext = file.fileExtension
 			
-//			println("Let me shake your hand!")
+			println("Let me shake your hand!")
 						
 			val reg = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.ui.editors").filter[it.attributeNames.contains("extensions")]
 			

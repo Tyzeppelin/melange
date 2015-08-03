@@ -705,9 +705,9 @@
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
       <propertyTester
-            class="fr.inria.diverse.melange.ui.MelangeExecutableExtensionFactory:fr.inria.diverse.melange.ui.propertytester.ExtensionFilePropertyTester"
-            id="fr.inria.diverse.melange.ui.propertytester.ExtensionFilePropertyTester"
-            namespace="fr.inria.diverse.melange.ui"
+            class="fr.inria.diverse.melange.ui.MelangeExecutableExtensionFactory:fr.inria.diverse.melange.ui.menu.ropertytester.ExtensionFilePropertyTester"
+            id="fr.inria.diverse.melange.ui.menu.propertytester.ExtensionFilePropertyTester"
+            namespace="fr.inria.diverse.melange.ui.menu"
             properties="isMelangeLanguage"
             type="org.eclipse.core.resources.IFile">
       </propertyTester>
@@ -722,7 +722,7 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="fr.inria.diverse.melange.ui.MelangeExecutableExtensionFactory:fr.inria.diverse.melange.ui.handlers.OpenAs"
+            class="fr.inria.diverse.melange.ui.menu.handlers.OpenAs"
             commandId="fr.inria.diverse.melange.ui.command.open">
       </handler>
    </extension>
@@ -730,34 +730,8 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.eclipse.ui.popup.any?after=group.open">
-         <command
-               commandId="fr.inria.diverse.melange.ui.command.open"
-               icon="icons/melange.png"
-               label="Open As ..."
-               mnemonic="A"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <iterate
-                        ifEmpty="false">
-                     <adapt
-                           type="org.eclipse.core.resources.IFile">
-                        <test
-                              property="fr.inria.diverse.melange.ui.isMelangeLanguage">
-                        </test>
-                     </adapt>
-                  </iterate>
-               </with>
-            </visibleWhen>
-         </command>
-      </menuContribution>
-      <menuContribution
-            allPopups="false"
-            class="fr.inria.diverse.melange.ui.menu.OpenAsMenu"
-            locationURI="popup:org.eclipse.ui.popup.any?after=group.open">
+            class="fr.inria.diverse.melange.ui.menu.OpenAs"
+            locationURI="popup:org.eclipse.ui.popup.any?before=group.edit">
       </menuContribution>
    </extension>
 
