@@ -21,42 +21,47 @@ import org.eclipse.ui.menus.CommandContributionItemParameter
 import org.eclipse.ui.menus.ExtensionContributionFactory
 import org.eclipse.ui.menus.IContributionRoot
 import org.eclipse.ui.services.IServiceLocator
+import java.util.List
+import org.eclipse.jface.action.Separator
 
 class OpenAs extends ExtensionContributionFactory {
-	
+
 	override createContributionItems(IServiceLocator serviceLocator, IContributionRoot additions) {
-		
-		val m = new MenuManager("Language")
-		
-		// get the current selection
+
+		val m = new MenuManager("Open &As")
+
 		val tree = PlatformUI.workbench.activeWorkbenchWindow.selectionService.selection as IStructuredSelection
 		val file = tree.firstElement
-		
+
 		val name = getLanguageName(file)
-		
-		println("nooo " + name)
-		
+
 		if (name != null){
-			
+
+			val language = createCommand(serviceLocator, name)
+			m.add(language)
+
+			val subtypes = getSubtypes(name)
+			if (subtypes != null) {
+				val sep = new Separator("subtypes")
+				m.add(sep)
+				subtypes.forEach[m.add(createCommand(serviceLocator, it))]
+			}
 			val camus = createCommand(serviceLocator, "Camus")
 			val aldebaran = createCommand(serviceLocator, "Aldebaran")
-			val language = createCommand(serviceLocator, name)
-			
-			
+			val mu = createCommand(serviceLocator, "Mu")
+			val shaka = createCommand(serviceLocator, "Shaka")
 			m.add(camus)
 			m.add(aldebaran)
-			m.add(language)
+			m.add(mu)
+			m.add(shaka)
+			
 		}
-		
-		
-		//		val reg = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.ui.editors").filter[it.attributeNames.contains("extensions")
-		
 		additions.addContributionItem(m, getExpression)
-		
 	}
-	
+
+
 	def Expression getExpression() {
-		
+
 		val test = new TestExpression(getNamespace, "isMelangeLanguage", null, null)
 
 		val adapt = new AdaptExpression("org.eclipse.core.resources.IFile")
@@ -70,7 +75,8 @@ class OpenAs extends ExtensionContributionFactory {
 
 		return with
 	}
-	
+
+
 	def IContributionItem createCommand(IServiceLocator serviceLocator, String name) {
 		
 		return new CommandContributionItem 
@@ -79,7 +85,8 @@ class OpenAs extends ExtensionContributionFactory {
 						null, null, null, null, name, "o", null, CommandContributionItem.STYLE_PUSH, null, true
 					))
 	}
-	
+
+
 	def boolean isValidSelection(Object file) {
 		return file instanceof IFile
 	}
@@ -89,38 +96,54 @@ class OpenAs extends ExtensionContributionFactory {
 		
 		// test both if the object "file" is a file and have a known extension
 		if (! (file instanceof IFile)) {
-				println("Not a file.")
 				return null		
 		}
-		val ext = (file as IFile).fileExtension
 		
-		val reg = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.ui.editors").filter[it.attributeNames.contains("extensions")]
-			
-		if( ! (reg.exists[it.getAttribute("extensions") == ext] || ext != "xmi")) {
-			println("ext unknown : " + ext)
+		val ext = (file as IFile).fileExtension
+		val reg = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.ui.editors")
+					.filter[it.attributeNames.contains("extensions")]
+
+		if( ! (reg.exists[it.getAttribute("extensions") == ext] || ext != "xmi") || ext == null) {
+//			println("ext unknown : " + ext)
 			return null	
 		}
 		
 		// try to open the current file as a EPackage
 		val fullPath = URI::createURI((file as IFile).fullPath.toString)
-		Resource.Factory.Registry.INSTANCE.extensionToFactoryMap.put("*", new XMIResourceFactoryImpl)
-		
+		Resource.Factory.Registry.INSTANCE.extensionToFactoryMap.put("ext", new XMIResourceFactoryImpl)
 		val rs = new ResourceSetImpl()
 		val uriConverter = rs.URIConverter
 		val normalized = if (fullPath.isPlatformResource)
                 fullPath
             else 
                 uriConverter.normalize(fullPath)
-        
-		val pkg = (rs.getResource(normalized, true).contents.get(0).eClass as EClassifier).EPackage
+
 		
-		val uri =  pkg.nsURI
+		val uri = rs.getResource(normalized, true).contents.get(0).eClass.EPackage.nsURI
 		
-//		val languages = Platform.extensionRegistry.getConfigurationElementsFor("fr.inria.diverse.melange.language")//.filter[it.attributeNames.contains("uri")]
-//		val name = languages.findFirst[it.getAttribute("uri") == uri]
-//		
-//		println(languages.toString)
 		
-		return uri
+		val language = Platform.extensionRegistry.getConfigurationElementsFor("fr.inria.diverse.melange.language")
+					.findFirst[it.getAttribute("uri") == uri]
+
+		
+		if (language == null){
+			return null
+		}
+		
+		
+		return language.getAttribute("exactType")
+	}
+	
+	def List<String> getSubtypes(String exactType) {
+		
+		val ret = newArrayList()
+		
+		val lang = Platform.extensionRegistry.getConfigurationElementsFor("fr.inria.diverse.melange.modeltype")
+					.filter[it.getAttribute("id") == exactType].get(0).getChildren("subtyping")
+		if (lang.length == 0) {
+			return null
+		}
+		lang.forEach[ret.add(it.getAttribute("modeltypeId"))]
+		return ret
 	}
 }
