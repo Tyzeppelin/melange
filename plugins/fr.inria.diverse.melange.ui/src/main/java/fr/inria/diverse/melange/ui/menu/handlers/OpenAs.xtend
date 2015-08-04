@@ -16,14 +16,20 @@ class OpenAs extends AbstractHandler{
 	override execute(ExecutionEvent event) throws ExecutionException {
 
 		// "I have concealed my sins as people do, by hiding my guilt in bytecode"
+		
+		val songname = event.parameters.get("editorID")
+		println(songname)
 
 		val file =  (HandlerUtil.getActiveMenuSelection(event) as TreeSelection).firstElement as IFile
 		val currentPage = HandlerUtil.getActiveWorkbenchWindow(event).activePage
-		val editorID = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.ui.editors")
-						.filter[it.attributeNames.contains("extensions")]
-						.findFirst[it.getAttribute("extensions") == file.fileExtension]
-						.getAttribute("id")
-
+		
+		val editorID = event.parameters.get("editorID") as String
+		
+		if (editorID == null) {
+			println("DIS IZ A TEST")
+			return null
+		}
+		
 		val input = new FileEditorInput(file)
 		try {
 			currentPage.openEditor(input, editorID)

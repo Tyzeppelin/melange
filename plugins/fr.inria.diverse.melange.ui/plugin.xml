@@ -717,6 +717,21 @@
       <command
             id="fr.inria.diverse.melange.ui.command.open"
             name="Open as">
+         <commandParameter
+               id="exactType"
+               name="ExactType"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="subType"
+               name="subType"
+               optional="true">
+         </commandParameter>
+         <commandParameter
+               id="editorID"
+               name="editorID"
+               optional="true">
+         </commandParameter>
       </command>
    </extension>
    <extension

@@ -1,5 +1,6 @@
 package fr.inria.diverse.melange.ui.menu
 
+import java.util.List
 import org.eclipse.core.expressions.Expression
 import org.eclipse.core.internal.expressions.AdaptExpression
 import org.eclipse.core.internal.expressions.IterateExpression
@@ -8,12 +9,12 @@ import org.eclipse.core.internal.expressions.WithExpression
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.runtime.Platform
 import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.EClassifier
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl
 import org.eclipse.jface.action.IContributionItem
 import org.eclipse.jface.action.MenuManager
+import org.eclipse.jface.action.Separator
 import org.eclipse.jface.viewers.IStructuredSelection
 import org.eclipse.ui.PlatformUI
 import org.eclipse.ui.menus.CommandContributionItem
@@ -21,8 +22,6 @@ import org.eclipse.ui.menus.CommandContributionItemParameter
 import org.eclipse.ui.menus.ExtensionContributionFactory
 import org.eclipse.ui.menus.IContributionRoot
 import org.eclipse.ui.services.IServiceLocator
-import java.util.List
-import org.eclipse.jface.action.Separator
 
 class OpenAs extends ExtensionContributionFactory {
 
@@ -37,14 +36,17 @@ class OpenAs extends ExtensionContributionFactory {
 
 		if (name != null){
 
-			val language = createCommand(serviceLocator, name)
+			val ext = (file as IFile).fileExtension
+			val language = createCommand(serviceLocator, name, getEditorID(ext))
 			m.add(language)
 
 			val subtypes = getSubtypes(name)
 			if (subtypes != null) {
 				val sep = new Separator("subtypes")
 				m.add(sep)
-				subtypes.forEach[m.add(createCommand(serviceLocator, it))]
+				subtypes.forEach[
+					m.add(createCommand(serviceLocator, it, getEditorID(ext)))
+				]
 			}
 			val camus = createCommand(serviceLocator, "Camus")
 			val aldebaran = createCommand(serviceLocator, "Aldebaran")
@@ -56,6 +58,7 @@ class OpenAs extends ExtensionContributionFactory {
 			m.add(shaka)
 			
 		}
+
 		additions.addContributionItem(m, getExpression)
 	}
 
@@ -75,22 +78,35 @@ class OpenAs extends ExtensionContributionFactory {
 
 		return with
 	}
-
-
+	
+	// Test-purpose method. Will disappear soon™
 	def IContributionItem createCommand(IServiceLocator serviceLocator, String name) {
-		
-		return new CommandContributionItem 
-				(new CommandContributionItemParameter
-					(serviceLocator, "melange."+name, "fr.inria.diverse.melange.ui.command.open", 
-						null, null, null, null, name, "o", null, CommandContributionItem.STYLE_PUSH, null, true
-					))
+		return createCommand(serviceLocator, name, null, null, null)
+	}
+	
+	def IContributionItem createCommand(IServiceLocator serviceLocator, 
+		String name, String editorID) {
+			return createCommand(serviceLocator, name, editorID, null, null)
+		}
+
+	def IContributionItem createCommand(IServiceLocator serviceLocator, 
+		String name, String editorID, String exactType, String subType) {
+		val map = newHashMap()
+		map.put("editorID", editorID)
+		map.put("exactType", exactType)
+		map.put("subType", subType)
+//		println("tast "+map)
+		return new CommandContributionItem (
+				new CommandContributionItemParameter(
+					serviceLocator, "melange."+name, "fr.inria.diverse.melange.ui.command.open", 
+					map, null, null, null, name, "o", null, CommandContributionItem.STYLE_PUSH, null, true
+				))
 	}
 
 
 	def boolean isValidSelection(Object file) {
 		return file instanceof IFile
 	}
-	
 	
 	def String getLanguageName(Object file) {
 		
@@ -125,11 +141,9 @@ class OpenAs extends ExtensionContributionFactory {
 		val language = Platform.extensionRegistry.getConfigurationElementsFor("fr.inria.diverse.melange.language")
 					.findFirst[it.getAttribute("uri") == uri]
 
-		
 		if (language == null){
 			return null
 		}
-		
 		
 		return language.getAttribute("exactType")
 	}
@@ -145,5 +159,13 @@ class OpenAs extends ExtensionContributionFactory {
 		}
 		lang.forEach[ret.add(it.getAttribute("modeltypeId"))]
 		return ret
+	}
+	
+	def String getEditorID(String ext) {
+		val editorID = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.ui.editors")
+						.filter[it.attributeNames.contains("extensions")]
+						.findFirst[it.getAttribute("extensions") == ext]
+						.getAttribute("id")
+		return editorID
 	}
 }
