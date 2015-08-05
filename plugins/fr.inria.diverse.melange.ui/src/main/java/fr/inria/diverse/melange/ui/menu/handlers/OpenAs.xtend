@@ -4,9 +4,7 @@ import org.eclipse.core.commands.AbstractHandler
 import org.eclipse.core.commands.ExecutionEvent
 import org.eclipse.core.commands.ExecutionException
 import org.eclipse.core.resources.IFile
-import org.eclipse.core.runtime.Platform
 import org.eclipse.jface.viewers.TreeSelection
-import org.eclipse.ui.IWorkbenchPage
 import org.eclipse.ui.PartInitException
 import org.eclipse.ui.handlers.HandlerUtil
 import org.eclipse.ui.part.FileEditorInput
@@ -26,7 +24,7 @@ class OpenAs extends AbstractHandler{
 		val editorID = event.parameters.get("editorID") as String
 		
 		if (editorID == null) {
-			println("DIS IZ A TEST")
+			println("Soon™")
 			return null
 		}
 		
