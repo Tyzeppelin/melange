@@ -737,7 +737,7 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="fr.inria.diverse.melange.ui.menu.handlers.OpenAs"
+            class="fr.inria.diverse.melange.ui.menu.handlers.OpenAsHandler"
             commandId="fr.inria.diverse.melange.ui.command.open">
       </handler>
    </extension>

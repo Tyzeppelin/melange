@@ -39,10 +39,8 @@ class OpenAs extends ExtensionContributionFactory {
 				val sep = new Separator("subtypes")
 				m.add(sep)
 				subtypes.forEach[
-					// As we still can't open a file with a different editor
-					// The command for subtypes won't do anything
-//					m.add(createCommand(serviceLocator, it, getEditorID(ext)))
-					m.add(createCommand(serviceLocator, it))
+					m.add(createCommand(serviceLocator, it, getEditorID(ext), name, it))
+//					m.add(createCommand(serviceLocator, it))
 				]
 			}
 		}
@@ -63,9 +61,9 @@ class OpenAs extends ExtensionContributionFactory {
 	def IContributionItem createCommand(IServiceLocator serviceLocator, 
 		String name, String editorID, String exactType, String subType) {
 		val map = newHashMap()
-		map.put("editorID", editorID)
 		map.put("exactType", exactType)
 		map.put("subType", subType)
+		map.put("editorID", editorID)
 //		println("tast "+map)
 		return new CommandContributionItem (
 				new CommandContributionItemParameter(
