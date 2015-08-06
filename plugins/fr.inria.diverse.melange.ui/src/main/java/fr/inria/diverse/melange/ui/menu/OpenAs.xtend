@@ -31,7 +31,7 @@ class OpenAs extends ExtensionContributionFactory {
 		if (name != null){
 
 			val ext = (file as IFile).fileExtension
-			val language = createCommand(serviceLocator, name, getEditorID(ext))
+			val language = createCommand(serviceLocator, name, getEditorFromExtension(ext))
 			m.add(language)
 
 			val subtypes = getSubtypes(name)
@@ -39,8 +39,7 @@ class OpenAs extends ExtensionContributionFactory {
 				val sep = new Separator("subtypes")
 				m.add(sep)
 				subtypes.forEach[
-					m.add(createCommand(serviceLocator, it, pifEditor(it), name, it))
-//					m.add(createCommand(serviceLocator, it))
+					m.add(createCommand(serviceLocator, it, getEditorFromSubtype(it), name, it))
 				]
 			}
 		}
@@ -90,7 +89,6 @@ class OpenAs extends ExtensionContributionFactory {
 		
 		// try to open the current file as a EPackage
 		val fullPath = URI::createURI((file as IFile).fullPath.toString)
-//		Resource.Factory.Registry.INSTANCE.extensionToFactoryMap.put(ext, new XMIResourceFactoryImpl)
 		val rs = new ResourceSetImpl()
 		val normalized = if (fullPath.isPlatformResource)
                 fullPath
@@ -115,17 +113,6 @@ class OpenAs extends ExtensionContributionFactory {
 		
 		return language.getAttribute("exactType")
 	}
-	
-	
-	def String pifEditor(String subType) {
-		
-		val uri = Platform.extensionRegistry.getConfigurationElementsFor("fr.inria.diverse.melange.language")
-					.findFirst[it.getAttribute("exactType") == subType]
-					.getAttribute("uri")
-		val ext = uri.substring(7, uri.length-1)
-		println("HEYA" + subType + " " + ext)
-		return getEditorID(ext)
-	} 
 
 
 	def List<String> getSubtypes(String exactType) {
@@ -141,6 +128,34 @@ class OpenAs extends ExtensionContributionFactory {
 		return subtypes
 	}
 
+
+	def String getEditorFromSubtype(String subType) {
+		
+		val uri = Platform.extensionRegistry.getConfigurationElementsFor("fr.inria.diverse.melange.language")
+					.findFirst[it.getAttribute("exactType") == subType]
+					.getAttribute("uri")
+		val pkg = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.emf.ecore.generated_package")
+					.findFirst[it.getAttribute("uri") == uri]
+					.getAttribute("class")
+		val clazz = Class::forName(pkg)
+
+		val jj = if (clazz != null)
+					clazz.getDeclaredField("eNS_PREFIX")
+				else
+					return null
+
+		val ext = if(jj != null)
+					jj.get(null) as String 
+				else
+					return null
+				
+		println(ext)
+		return getEditorID(ext)
+	} 
+	
+	def String getEditorFromExtension(String ext) {
+		return getEditorID(ext)
+	}
 
 	def String getEditorID(String ext) {
 		val editors = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.ui.editors")
