@@ -39,7 +39,7 @@ class OpenAs extends ExtensionContributionFactory {
 				val sep = new Separator("subtypes")
 				m.add(sep)
 				subtypes.forEach[
-					m.add(createCommand(serviceLocator, it, getEditorID(ext), name, it))
+					m.add(createCommand(serviceLocator, it, pifEditor(it), name, it))
 //					m.add(createCommand(serviceLocator, it))
 				]
 			}
@@ -115,6 +115,17 @@ class OpenAs extends ExtensionContributionFactory {
 		
 		return language.getAttribute("exactType")
 	}
+	
+	
+	def String pifEditor(String subType) {
+		
+		val uri = Platform.extensionRegistry.getConfigurationElementsFor("fr.inria.diverse.melange.language")
+					.findFirst[it.getAttribute("exactType") == subType]
+					.getAttribute("uri")
+		val ext = uri.substring(7, uri.length-1)
+		println("HEYA" + subType + " " + ext)
+		return getEditorID(ext)
+	} 
 
 
 	def List<String> getSubtypes(String exactType) {
@@ -132,10 +143,13 @@ class OpenAs extends ExtensionContributionFactory {
 
 
 	def String getEditorID(String ext) {
-		val editorID = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.ui.editors")
+		val editors = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.ui.editors")
 						.filter[it.attributeNames.contains("extensions")]
-						.findFirst[it.getAttribute("extensions") == ext]
-						.getAttribute("id")
+		val editorID = if (editors.length == 0) 
+							""
+						else
+							editors.findFirst[it.getAttribute("extensions") == ext]
+							.getAttribute("id")
 		return editorID
 	}
 }
