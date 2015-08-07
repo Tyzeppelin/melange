@@ -131,24 +131,10 @@ class OpenAs extends ExtensionContributionFactory {
 
 	def String getEditorFromSubtype(String subType) {
 		
-		val uri = Platform.extensionRegistry.getConfigurationElementsFor("fr.inria.diverse.melange.language")
+		val ext = Platform.extensionRegistry.getConfigurationElementsFor("fr.inria.diverse.melange.language")
 					.findFirst[it.getAttribute("exactType") == subType]
-					.getAttribute("uri")
-		val pkg = Platform.extensionRegistry.getConfigurationElementsFor("org.eclipse.emf.ecore.generated_package")
-					.findFirst[it.getAttribute("uri") == uri]
-					.getAttribute("class")
-		val clazz = Class::forName(pkg)
+					.getAttribute("fileExtension")
 
-		val jj = if (clazz != null)
-					clazz.getDeclaredField("eNS_PREFIX")
-				else
-					return null
-
-		val ext = if(jj != null)
-					jj.get(null) as String 
-				else
-					return null
-				
 		println(ext)
 		return getEditorID(ext)
 	} 

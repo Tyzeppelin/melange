@@ -82,16 +82,16 @@
     <extension
             point="org.eclipse.ui.preferencePages">
         <page
-            class="fr.inria.diverse.melange.ui.preferences.MelangePreferencePage"
-            id="fr.inria.diverse.melange.Melange"
-            name="Melange">
+              class="fr.inria.diverse.melange.ui.preferences.MelangePreferencePage"
+              id="fr.inria.diverse.melange.Melange"
+              name="Melange">
             <keywordReference id="fr.inria.diverse.melange.ui.keyword_Melange"/>
         </page>
         <page
-            category="fr.inria.diverse.melange.Melange"
-            class="fr.inria.diverse.melange.ui.MelangeExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
-            id="fr.inria.diverse.melange.Melange.coloring"
-            name="Syntax Coloring">
+              category="fr.inria.diverse.melange.Melange"
+              class="fr.inria.diverse.melange.ui.MelangeExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+              id="fr.inria.diverse.melange.Melange.coloring"
+              name="Syntax Coloring">
             <keywordReference id="fr.inria.diverse.melange.ui.keyword_Melange"/>
         </page>
         <page
