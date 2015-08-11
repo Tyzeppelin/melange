@@ -782,5 +782,12 @@
             name="Clean All">
       </command>
    </extension>
+   <extension
+         point="org.eclipse.ui.console.consoleFactories">
+      <consoleFactory
+            class="fr.inria.diverse.melange.ui.console.MelangeConsole$Factory"
+            label="Melange Compiler">
+      </consoleFactory>
+   </extension>
 
 </plugin>
